@@ -1,41 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+
 <div class="container my-5">
 
-    <h1 class="fw-bold mb-4">
-        Technology News
-    </h1>
+<h1 class="mb-4">
+{{ category }} News
+</h1>
 
-    <div class="row">
+<div class="row">
 
-        <!-- Card -->
+<div class="col-lg-4">
 
-        <div class="col-lg-4 mb-4">
+<div class="card shadow">
 
-            <div class="card shadow-sm border-0">
+<img src="https://placehold.co/600x400">
 
-                <img src="https://placehold.co/600x400" class="card-img-top">
+<div class="card-body">
 
-                <div class="card-body">
+<h5>Article Title</h5>
 
-                    <span class="badge bg-danger mb-2">
-                        Technology
-                    </span>
+<p>Short Description...</p>
 
-                    <h5>Article Title</h5>
-
-                    <p>
-                        Short Description...
-                    </p>
-
-                    <a href="#" class="btn btn-danger">
-                        Read More
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
+<a href="#" class="btn btn-danger">
+Read More
+</a>
 
 </div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
