@@ -1,0 +1,25 @@
+.navbar-brand{
+    letter-spacing:1px;
+}
+
+.nav-link{
+    font-weight:500;
+    margin:0 8px;
+    transition:.3s;
+}
+
+.nav-link:hover{
+    color:#dc3545 !important;
+}
+
+.form-control{
+    border-radius:25px;
+}
+
+.btn-danger{
+    border-radius:25px;
+    padding:8px 20px;
+}
+.bg-danger{
+    background: #dc3545 !important;
+}
