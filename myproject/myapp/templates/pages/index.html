@@ -3,152 +3,129 @@
 
 {% block content %}
 
-<!-- ================= HERO / LATEST NEWS ================= -->
+<!-- ================= BREAKING NEWS ================= -->
 
-<div class="container my-5">
+<div class="bg-danger text-white">
+    <div class="container py-2">
+        <div class="d-flex align-items-center">
 
-    <div class="row">
+            <span class="fw-bold me-3 text-nowrap">
+                🔥 BREAKING
+            </span>
 
-        <!-- Main News -->
+            <marquee>
+                Latest headlines from around the world — Stay updated with NewsWave.
+            </marquee>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- ================= HERO SECTION ================= -->
+
+<section class="container my-5">
+
+    <div class="row g-4">
+
+        <!-- FEATURED ARTICLE -->
 
         <div class="col-lg-8">
 
-            <h2 class="fw-bold mb-4">
-                Latest News
-            </h2>
+            {% if articles %}
 
-            <div class="row">
+            {% with featured=articles.0 %}
 
-                {% for article in articles %}
+            <div class="card border-0 shadow-lg overflow-hidden">
 
-                <div class="col-lg-6 col-md-6 mb-4">
+                <img src="{{ featured.urlToImage|default:'https://placehold.co/900x500' }}"
+                     class="card-img-top"
+                     style="height:420px; object-fit:cover;"
+                     alt="{{ featured.title }}">
 
-                    <div class="card h-100 shadow-sm border-0">
+                <div class="card-body p-4">
 
-                        <!-- Article Image -->
+                    <span class="badge bg-danger mb-2">
+                        FEATURED
+                    </span>
 
-                        <img src="{{ article.urlToImage|default:'https://placehold.co/600x400' }}"
-                             class="card-img-top"
-                             style="height: 220px; object-fit: cover;"
-                             alt="{{ article.title }}">
+                    <h1 class="fw-bold">
+                        {{ featured.title }}
+                    </h1>
 
-                        <!-- Card Body -->
+                    <p class="text-muted">
+                        {{ featured.description|default:"No description available." }}
+                    </p>
 
-                        <div class="card-body">
+                    {% if featured.slug %}
 
-                            <span class="badge bg-primary mb-2">
-                                Latest
-                            </span>
+                        <a href="{% url 'article_detail' featured.slug %}"
+                           class="btn btn-danger">
 
-                            <h5 class="card-title fw-bold">
-                                {{ article.title }}
-                            </h5>
+                            Read Full Story →
 
-                            <p class="card-text text-muted">
-                                {{ article.description|default:"No description available." }}
-                            </p>
+                        </a>
 
-                        </div>
+                    {% else %}
 
-                        <!-- Card Footer -->
+                        <a href="{% url 'article' %}?title={{ featured.title|urlencode }}&description={{ featured.description|urlencode }}&image={{ featured.urlToImage|urlencode }}&url={{ featured.url|urlencode }}&published_at={{ featured.publishedAt|urlencode }}&author={{ featured.author|urlencode }}"
+                           class="btn btn-danger">
 
-                        <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
+                            Read Full Story →
 
-                            <small class="text-muted">
+                        </a>
 
-                                {{ article.publishedAt|slice:":10" }}
-
-                            </small>
-
-
-                            <!-- Read More -->
-
-                            {% if article.slug %}
-
-                                <!-- Django Admin Article -->
-
-                                <a href="{% url 'article_detail' article.slug %}"
-                                   class="btn btn-sm btn-danger">
-
-                                    Read More
-
-                                </a>
-
-                            {% else %}
-
-                                <!-- NewsAPI Article -->
-
-                                <a href="{% url 'article' %}?title={{ article.title|urlencode }}&description={{ article.description|urlencode }}&image={{ article.urlToImage|urlencode }}&url={{ article.url|urlencode }}&published_at={{ article.publishedAt|urlencode }}&author={{ article.author|urlencode }}"
-                                   class="btn btn-sm btn-danger">
-
-                                    Read More
-
-                                </a>
-
-                            {% endif %}
-
-                        </div>
-
-                    </div>
+                    {% endif %}
 
                 </div>
-
-
-                {% empty %}
-
-                <div class="col-12">
-
-                    <div class="alert alert-warning text-center">
-
-                        No news available right now.
-
-                    </div>
-
-                </div>
-
-                {% endfor %}
 
             </div>
+
+            {% endwith %}
+
+            {% endif %}
 
         </div>
 
 
-        <!-- ================= TRENDING NEWS ================= -->
+        <!-- TRENDING NEWS -->
 
         <div class="col-lg-4">
 
-            <h4 class="fw-bold mb-4">
+            <h3 class="fw-bold mb-3">
                 Trending News
-            </h4>
+            </h3>
 
 
-            <div class="card mb-3 shadow-sm border-0">
+            {% for article in articles|slice:"1:4" %}
+
+            <div class="card border-0 shadow-sm mb-3">
 
                 <div class="row g-0">
 
                     <div class="col-4">
 
-                        <img src="https://placehold.co/150x120"
+                        <img src="{{ article.urlToImage|default:'https://placehold.co/200x150' }}"
                              class="img-fluid rounded-start h-100"
-                             alt="Trending News">
+                             style="object-fit:cover;"
+                             alt="{{ article.title }}">
 
                     </div>
 
-
                     <div class="col-8">
 
-                        <div class="card-body py-2">
+                        <div class="card-body p-3">
 
-                            <span class="badge bg-danger mb-2">
-                                Sports
+                            <span class="badge bg-danger mb-1">
+                                News
                             </span>
 
-                            <h6 class="fw-bold">
-                                Trending news headline goes here...
+                            <h6 class="fw-bold mb-1">
+                                {{ article.title|truncatechars:70 }}
                             </h6>
 
                             <small class="text-muted">
-                                July 30, 2026
+                                {{ article.publishedAt|slice:":10" }}
                             </small>
 
                         </div>
@@ -159,25 +136,35 @@
 
             </div>
 
+            {% endfor %}
+
         </div>
 
     </div>
 
-</div>
+</section>
 
 
-<!-- ================= LATEST NEWS SECTION ================= -->
+<!-- ================= LATEST NEWS ================= -->
 
 <section class="container my-5">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <h2 class="fw-bold">
-            Latest News
-        </h2>
+        <div>
+
+            <h2 class="fw-bold mb-1">
+                Latest News
+            </h2>
+
+            <p class="text-muted mb-0">
+                Stay informed with the latest headlines
+            </p>
+
+        </div>
 
         <a href="{% url 'category' 'general' %}"
-           class="text-danger text-decoration-none fw-bold">
+           class="btn btn-outline-danger">
 
             View All →
 
@@ -188,51 +175,77 @@
 
     <div class="row">
 
-        {% for article in articles|slice:":3" %}
+        {% for article in articles|slice:"1:7" %}
 
         <div class="col-lg-4 col-md-6 mb-4">
 
-            <div class="card h-100 shadow-sm border-0">
+            <div class="card h-100 border-0 shadow-sm news-card">
 
                 <img src="{{ article.urlToImage|default:'https://placehold.co/600x400' }}"
                      class="card-img-top"
-                     style="height: 220px; object-fit: cover;"
+                     style="height:220px; object-fit:cover;"
                      alt="{{ article.title }}">
-
 
                 <div class="card-body">
 
+                    <span class="badge bg-primary mb-2">
+                        Latest
+                    </span>
+
                     <h5 class="fw-bold">
-                        {{ article.title }}
+                        {{ article.title|truncatechars:90 }}
                     </h5>
 
                     <p class="text-muted">
-                        {{ article.description|default:"No description available." }}
+                        {{ article.description|default:"No description available."|truncatechars:120 }}
                     </p>
-
-
-                    {% if article.slug %}
-
-                        <a href="{% url 'article_detail' article.slug %}"
-                           class="btn btn-danger">
-
-                            Read More
-
-                        </a>
-
-                    {% else %}
-
-                        <a href="{% url 'article' %}?title={{ article.title|urlencode }}&description={{ article.description|urlencode }}&image={{ article.urlToImage|urlencode }}&url={{ article.url|urlencode }}&published_at={{ article.publishedAt|urlencode }}&author={{ article.author|urlencode }}"
-                           class="btn btn-danger">
-
-                            Read More
-
-                        </a>
-
-                    {% endif %}
 
                 </div>
 
+
+                <div class="card-footer bg-white border-0">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <small class="text-muted">
+                            {{ article.publishedAt|slice:":10" }}
+                        </small>
+
+
+                        {% if article.slug %}
+
+                            <a href="{% url 'article_detail' article.slug %}"
+                               class="btn btn-sm btn-danger">
+
+                                Read More
+
+                            </a>
+
+                        {% else %}
+
+                            <a href="{% url 'article' %}?title={{ article.title|urlencode }}&description={{ article.description|urlencode }}&image={{ article.urlToImage|urlencode }}&url={{ article.url|urlencode }}&published_at={{ article.publishedAt|urlencode }}&author={{ article.author|urlencode }}"
+                               class="btn btn-sm btn-danger">
+
+                                Read More
+
+                            </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="col-12">
+
+            <div class="alert alert-warning text-center">
+                No news available right now.
             </div>
 
         </div>
@@ -244,7 +257,93 @@
 </section>
 
 
-<!-- ================= SUBSCRIBE ================= -->
+<!-- ================= CATEGORY QUICK LINKS ================= -->
+
+<section class="container my-5">
+
+    <h2 class="fw-bold text-center mb-4">
+        Explore Categories
+    </h2>
+
+    <div class="row g-3">
+
+        <div class="col-md-4 col-6">
+
+            <a href="{% url 'category' 'business' %}"
+               class="btn btn-outline-dark w-100 py-3">
+
+                💼 Business
+
+            </a>
+
+        </div>
+
+
+        <div class="col-md-4 col-6">
+
+            <a href="{% url 'category' 'technology' %}"
+               class="btn btn-outline-dark w-100 py-3">
+
+                💻 Technology
+
+            </a>
+
+        </div>
+
+
+        <div class="col-md-4 col-6">
+
+            <a href="{% url 'category' 'sports' %}"
+               class="btn btn-outline-dark w-100 py-3">
+
+                ⚽ Sports
+
+            </a>
+
+        </div>
+
+
+        <div class="col-md-4 col-6">
+
+            <a href="{% url 'category' 'health' %}"
+               class="btn btn-outline-dark w-100 py-3">
+
+                ❤️ Health
+
+            </a>
+
+        </div>
+
+
+        <div class="col-md-4 col-6">
+
+            <a href="{% url 'category' 'entertainment' %}"
+               class="btn btn-outline-dark w-100 py-3">
+
+                🎬 Entertainment
+
+            </a>
+
+        </div>
+
+
+        <div class="col-md-4 col-6">
+
+            <a href="{% url 'category' 'general' %}"
+               class="btn btn-outline-dark w-100 py-3">
+
+                🌎 General
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= NEWSLETTER ================= -->
 
 <section class="bg-dark text-white py-5">
 
@@ -254,7 +353,7 @@
             Subscribe to NewsWave
         </h2>
 
-        <p>
+        <p class="text-light">
             Get the latest headlines delivered to your inbox.
         </p>
 
@@ -263,8 +362,8 @@
 
             <div class="col-md-5 mb-2">
 
-                <input class="form-control"
-                       type="email"
+                <input type="email"
+                       class="form-control"
                        placeholder="Enter your email"
                        required>
 

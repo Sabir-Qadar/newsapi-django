@@ -4,18 +4,37 @@
 
 <div class="container my-5">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="fw-bold">
-            Search Results
-        </h1>
+    <!-- Search Heading -->
+
+    <div class="mb-4">
+
+        {% if query %}
+
+            <h1 class="fw-bold">
+                Search Results
+            </h1>
+
+            <p class="text-muted">
+                Results for:
+                <strong>"{{ query }}"</strong>
+            </p>
+
+        {% else %}
+
+            <h1 class="fw-bold">
+                Search News
+            </h1>
+
+            <p class="text-muted">
+                Enter a keyword to search for news.
+            </p>
+
+        {% endif %}
+
     </div>
 
-    {% if query %}
-        <p class="text-muted mb-4">
-            Showing results for:
-            <strong>"{{ query }}"</strong>
-        </p>
-    {% endif %}
+
+    <!-- Search Results -->
 
     <div class="row">
 
@@ -25,22 +44,34 @@
 
             <div class="card h-100 shadow-sm border-0">
 
+                <!-- Image -->
+
                 <img src="{{ article.urlToImage|default:'https://placehold.co/600x400' }}"
                      class="card-img-top"
-                     style="height: 220px; object-fit: cover;"
+                     style="height:220px; object-fit:cover;"
                      alt="{{ article.title }}">
+
+
+                <!-- Content -->
 
                 <div class="card-body">
 
-                    <h5 class="card-title">
+                    <span class="badge bg-primary mb-2">
+                        Search Result
+                    </span>
+
+                    <h5 class="card-title fw-bold">
                         {{ article.title }}
                     </h5>
 
-                    <p class="card-text">
+                    <p class="card-text text-muted">
                         {{ article.description|default:"No description available." }}
                     </p>
 
                 </div>
+
+
+                <!-- Footer -->
 
                 <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
 
@@ -48,41 +79,55 @@
                         {{ article.publishedAt|slice:":10" }}
                     </small>
 
+
                     <a href="{% url 'article' %}?title={{ article.title|urlencode }}&description={{ article.description|urlencode }}&image={{ article.urlToImage|urlencode }}&url={{ article.url|urlencode }}&published_at={{ article.publishedAt|urlencode }}&author={{ article.author|urlencode }}"
-   class="btn btn-sm btn-danger">
-    Read More
-</a>
+                       class="btn btn-sm btn-danger">
+
+                        Read More
+
+                    </a>
+
                 </div>
 
             </div>
 
         </div>
 
+
         {% empty %}
 
-        <div class="col-12 text-center py-5">
+        <!-- No Results -->
 
-            {% if query %}
+        <div class="col-12">
 
-                <h4 class="text-muted">
-                    No news found for "{{ query }}"
-                </h4>
+            <div class="text-center py-5">
 
-                <p class="text-muted">
-                    Try searching for something else.
-                </p>
+                {% if query %}
 
-            {% else %}
+                    <h4 class="text-muted">
+                        No news found for "{{ query }}".
+                    </h4>
 
-                <h4 class="text-muted">
-                    Search for news
-                </h4>
+                    <p class="text-muted">
+                        Try searching with a different keyword.
+                    </p>
 
-                <p class="text-muted">
-                    Enter a topic in the search bar above.
-                </p>
+                {% else %}
 
-            {% endif %}
+                    <h4 class="text-muted">
+                        Start searching for news.
+                    </h4>
+
+                {% endif %}
+
+                <a href="{% url 'home' %}"
+                   class="btn btn-danger mt-3">
+
+                    Back to Home
+
+                </a>
+
+            </div>
 
         </div>
 

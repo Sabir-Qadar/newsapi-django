@@ -15,7 +15,7 @@ class NewsArticleAdmin(admin.ModelAdmin):
 
     list_filter = (
         "category",
-        "published_at",
+        "created_at",
     )
 
     search_fields = (
@@ -25,4 +25,10 @@ class NewsArticleAdmin(admin.ModelAdmin):
         "author",
     )
 
-    ordering = ("-published_at",)
+    prepopulated_fields = {
+        "slug": ("title",)
+    }
+
+    ordering = (
+        "-created_at",
+    )
