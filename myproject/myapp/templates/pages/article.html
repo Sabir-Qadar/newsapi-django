@@ -1,18 +1,94 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
 <div class="container my-5">
 
-<img src="https://placehold.co/1200x500"
-class="img-fluid rounded mb-4">
+    {% if article %}
 
-<h1>
-News Headline
-</h1>
+    <div class="row justify-content-center">
 
-<p>
-Complete article will appear here.
-</p>
+        <div class="col-lg-9">
+
+            <article>
+
+                {% if article.urlToImage %}
+                <img src="{{ article.urlToImage }}"
+                     class="img-fluid rounded shadow-sm mb-4"
+                     style="width: 100%; max-height: 500px; object-fit: cover;"
+                     alt="{{ article.title }}">
+                {% endif %}
+
+                <span class="badge bg-danger mb-3">
+                    News
+                </span>
+
+                <h1 class="fw-bold mb-3">
+                    {{ article.title }}
+                </h1>
+
+                <div class="text-muted mb-4">
+
+                    {% if article.author %}
+                        <span>By {{ article.author }}</span>
+                    {% endif %}
+
+                    {% if article.publishedAt %}
+                        <span class="ms-3">
+                            {{ article.publishedAt|slice:":10" }}
+                        </span>
+                    {% endif %}
+
+                </div>
+
+                {% if article.description %}
+                <p class="lead">
+                    {{ article.description }}
+                </p>
+                {% endif %}
+
+                {% if article.content %}
+                <p>
+                    {{ article.content }}
+                </p>
+                {% endif %}
+
+                <div class="mt-4">
+
+                    <a href="{{ article.url }}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="btn btn-danger">
+                        Read Full Article →
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="text-center py-5">
+
+        <h2 class="fw-bold">
+            Article Not Found
+        </h2>
+
+        <p class="text-muted">
+            Sorry, we couldn't find this article.
+        </p>
+
+        <a href="{% url 'home' %}" class="btn btn-danger">
+            Back to Home
+        </a>
+
+    </div>
+
+    {% endif %}
 
 </div>
 

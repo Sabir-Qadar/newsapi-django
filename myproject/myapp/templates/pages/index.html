@@ -3,49 +3,124 @@
 
 {% block content %}
 
+<!-- ================= HERO / LATEST NEWS ================= -->
+
 <div class="container my-5">
+
     <div class="row">
 
-        <div class="col-lg-8 mb-4">
+        <!-- Main News -->
 
-            <div class="card border-0 shadow-lg">
+        <div class="col-lg-8">
 
-                <img src="https://placehold.co/900x500"
-                     class="card-img-top"
-                     alt="Featured News">
+            <h2 class="fw-bold mb-4">
+                Latest News
+            </h2>
 
-                <div class="card-body">
+            <div class="row">
 
-                    <span class="badge bg-danger mb-2">
-                        Technology
-                    </span>
+                {% for article in articles %}
 
-                    <h2 class="card-title fw-bold">
-                        Featured News Headline Goes Here
-                    </h2>
+                <div class="col-lg-6 col-md-6 mb-4">
 
-                    <p class="text-muted">
-                        Published on July 30, 2026
-                    </p>
+                    <div class="card h-100 shadow-sm border-0">
 
-                    <p class="card-text">
-                        This section will display the featured news description.
-                        Once the API is integrated, this content will come dynamically.
-                    </p>
+                        <!-- Article Image -->
 
-                    <a href="#" class="btn btn-danger">
-                        Read More →
-                    </a>
+                        <img src="{{ article.urlToImage|default:'https://placehold.co/600x400' }}"
+                             class="card-img-top"
+                             style="height: 220px; object-fit: cover;"
+                             alt="{{ article.title }}">
+
+                        <!-- Card Body -->
+
+                        <div class="card-body">
+
+                            <span class="badge bg-primary mb-2">
+                                Latest
+                            </span>
+
+                            <h5 class="card-title fw-bold">
+                                {{ article.title }}
+                            </h5>
+
+                            <p class="card-text text-muted">
+                                {{ article.description|default:"No description available." }}
+                            </p>
+
+                        </div>
+
+                        <!-- Card Footer -->
+
+                        <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
+
+                            <small class="text-muted">
+
+                                {{ article.publishedAt|slice:":10" }}
+
+                            </small>
+
+
+                            <!-- Read More -->
+
+                            {% if article.slug %}
+
+                                <!-- Django Admin Article -->
+
+                                <a href="{% url 'article_detail' article.slug %}"
+                                   class="btn btn-sm btn-danger">
+
+                                    Read More
+
+                                </a>
+
+                            {% else %}
+
+                                <!-- NewsAPI Article -->
+
+                                <a href="{% url 'article' %}?title={{ article.title|urlencode }}&description={{ article.description|urlencode }}&image={{ article.urlToImage|urlencode }}&url={{ article.url|urlencode }}&published_at={{ article.publishedAt|urlencode }}&author={{ article.author|urlencode }}"
+                                   class="btn btn-sm btn-danger">
+
+                                    Read More
+
+                                </a>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
 
                 </div>
+
+
+                {% empty %}
+
+                <div class="col-12">
+
+                    <div class="alert alert-warning text-center">
+
+                        No news available right now.
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
 
             </div>
 
         </div>
 
+
+        <!-- ================= TRENDING NEWS ================= -->
+
         <div class="col-lg-4">
 
-            <h4 class="fw-bold mb-4">Trending News</h4>
+            <h4 class="fw-bold mb-4">
+                Trending News
+            </h4>
+
 
             <div class="card mb-3 shadow-sm border-0">
 
@@ -54,9 +129,11 @@
                     <div class="col-4">
 
                         <img src="https://placehold.co/150x120"
-                             class="img-fluid rounded-start h-100">
+                             class="img-fluid rounded-start h-100"
+                             alt="Trending News">
 
                     </div>
+
 
                     <div class="col-8">
 
@@ -66,7 +143,7 @@
                                 Sports
                             </span>
 
-                            <h6>
+                            <h6 class="fw-bold">
                                 Trending news headline goes here...
                             </h6>
 
@@ -85,35 +162,74 @@
         </div>
 
     </div>
+
 </div>
+
+
+<!-- ================= LATEST NEWS SECTION ================= -->
 
 <section class="container my-5">
 
-    <div class="d-flex justify-content-between mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <h2>Latest News</h2>
+        <h2 class="fw-bold">
+            Latest News
+        </h2>
 
-        <a href="#">View All →</a>
+        <a href="{% url 'category' 'general' %}"
+           class="text-danger text-decoration-none fw-bold">
+
+            View All →
+
+        </a>
 
     </div>
 
+
     <div class="row">
 
-        <div class="col-lg-4">
+        {% for article in articles|slice:":3" %}
 
-            <div class="card shadow-sm">
+        <div class="col-lg-4 col-md-6 mb-4">
 
-                <img src="https://placehold.co/600x400" class="card-img-top">
+            <div class="card h-100 shadow-sm border-0">
+
+                <img src="{{ article.urlToImage|default:'https://placehold.co/600x400' }}"
+                     class="card-img-top"
+                     style="height: 220px; object-fit: cover;"
+                     alt="{{ article.title }}">
+
 
                 <div class="card-body">
 
-                    <h5>Latest News Headline</h5>
+                    <h5 class="fw-bold">
+                        {{ article.title }}
+                    </h5>
 
-                    <p>Small description...</p>
+                    <p class="text-muted">
+                        {{ article.description|default:"No description available." }}
+                    </p>
 
-                    <a href="#" class="btn btn-danger">
-                        Read More
-                    </a>
+
+                    {% if article.slug %}
+
+                        <a href="{% url 'article_detail' article.slug %}"
+                           class="btn btn-danger">
+
+                            Read More
+
+                        </a>
+
+                    {% else %}
+
+                        <a href="{% url 'article' %}?title={{ article.title|urlencode }}&description={{ article.description|urlencode }}&image={{ article.urlToImage|urlencode }}&url={{ article.url|urlencode }}&published_at={{ article.publishedAt|urlencode }}&author={{ article.author|urlencode }}"
+                           class="btn btn-danger">
+
+                            Read More
+
+                        </a>
+
+                    {% endif %}
 
                 </div>
 
@@ -121,15 +237,20 @@
 
         </div>
 
+        {% endfor %}
+
     </div>
 
 </section>
+
+
+<!-- ================= SUBSCRIBE ================= -->
 
 <section class="bg-dark text-white py-5">
 
     <div class="container text-center">
 
-        <h2>
+        <h2 class="fw-bold">
             Subscribe to NewsWave
         </h2>
 
@@ -137,19 +258,26 @@
             Get the latest headlines delivered to your inbox.
         </p>
 
+
         <form class="row justify-content-center">
 
-            <div class="col-md-5">
+            <div class="col-md-5 mb-2">
 
                 <input class="form-control"
-                       placeholder="Enter your email">
+                       type="email"
+                       placeholder="Enter your email"
+                       required>
 
             </div>
 
+
             <div class="col-md-2">
 
-                <button class="btn btn-danger w-100">
+                <button type="submit"
+                        class="btn btn-danger w-100">
+
                     Subscribe
+
                 </button>
 
             </div>

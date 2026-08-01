@@ -1,37 +1,135 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
 <div class="container my-5">
 
-<h1 class="mb-4">
-{{ category }} News
-</h1>
+    <!-- ================= CATEGORY HEADER ================= -->
 
-<div class="row">
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-<div class="col-lg-4">
+        <h1 class="fw-bold">
+            {{ category }} News
+        </h1>
 
-<div class="card shadow">
+        <span class="badge bg-danger fs-6">
+            Latest
+        </span>
 
-<img src="https://placehold.co/600x400">
+    </div>
 
-<div class="card-body">
 
-<h5>Article Title</h5>
+    <!-- ================= NEWS ARTICLES ================= -->
 
-<p>Short Description...</p>
+    <div class="row">
 
-<a href="#" class="btn btn-danger">
-Read More
-</a>
+        {% for article in articles %}
 
-</div>
+        <div class="col-lg-4 col-md-6 mb-4">
 
-</div>
+            <div class="card h-100 shadow-sm border-0">
 
-</div>
+                <!-- Article Image -->
 
-</div>
+                <img src="{{ article.urlToImage|default:'https://placehold.co/600x400' }}"
+                     class="card-img-top"
+                     style="height: 220px; object-fit: cover;"
+                     alt="{{ article.title }}">
+
+
+                <!-- Article Body -->
+
+                <div class="card-body">
+
+                    <span class="badge bg-primary mb-2">
+                        {{ category }}
+                    </span>
+
+                    <h5 class="card-title fw-bold">
+                        {{ article.title }}
+                    </h5>
+
+                    <p class="card-text text-muted">
+                        {{ article.description|default:"No description available." }}
+                    </p>
+
+                </div>
+
+
+                <!-- Article Footer -->
+
+                <div class="card-footer bg-white border-0 d-flex justify-content-between align-items-center">
+
+                    <small class="text-muted">
+
+                        {{ article.publishedAt|slice:":10" }}
+
+                    </small>
+
+
+                    <!-- ================= READ MORE ================= -->
+
+                    {% if article.slug %}
+
+                        <!-- Admin Article -->
+
+                        <a href="{% url 'article_detail' article.slug %}"
+                           class="btn btn-sm btn-danger">
+
+                            Read More
+
+                        </a>
+
+                    {% else %}
+
+                        <!-- NewsAPI Article -->
+
+                        <a href="{% url 'article' %}?title={{ article.title|urlencode }}&description={{ article.description|urlencode }}&image={{ article.urlToImage|urlencode }}&url={{ article.url|urlencode }}&published_at={{ article.publishedAt|urlencode }}&author={{ article.author|urlencode }}"
+                           class="btn btn-sm btn-danger">
+
+                            Read More
+
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% empty %}
+
+        <!-- No Articles -->
+
+        <div class="col-12">
+
+            <div class="text-center py-5">
+
+                <h4 class="text-muted">
+                    No news available for this category.
+                </h4>
+
+                <p class="text-muted">
+                    Please try another category later.
+                </p>
+
+                <a href="{% url 'home' %}"
+                   class="btn btn-danger">
+
+                    Back to Home
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
 
 </div>
 
